@@ -1,21 +1,22 @@
 {
-  "name": "badges",
+  "name": "badgeServer",
   "version": "1.0.0",
-  "description": "Badges for jenkins",
+  "description": "Server to save jacoco statistics and publishin them using shild.io",
   "main": "badges.js",
   "dependencies": {
+    "mocha": "4.1.0",
+    "chai": "4.1.2",
     "commander": "^2.2.0",
     "express": "^4.5.1",
-    "request": "^2.37.0",
-    "properties": "^1.2.1",
-    "node-gitlab-webhook": "1.0.3",
-    "xml2js": "^0.4.19",
     "flat-file-db": "1.0.0",
-    "chai": "4.1.2",
-    "winston": "2.4.0"
+    "node-gitlab-webhook": "1.0.3",
+    "properties": "^1.2.1",
+    "request": "^2.37.0",
+    "winston": "2.4.0",
+    "xml2js": "^0.4.19"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha test/ --recursive"
   },
   "keywords": [],
   "author": "",
