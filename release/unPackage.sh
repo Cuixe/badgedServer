@@ -1,38 +1,35 @@
 #!/bin/bash
 
-USER_PATH="/home/scnusr"
+USER=""
+USER_PATH="/home/$USER"
 BASE_PATH="$USER_PATH/badgeServer"
 PACKAGE_NAME="install.tar.gz"
 
 createDirectories() {
     if [ ! -d "$BASE_PATH" ]; then
-        echo "**********************************"
-        echo "    Creando directorio base       "
-        echo "**********************************"
-        sleep 1
+        printMessage "Creando directorio Base"
         mkdir "$BASE_PATH"
     fi
+
+    if [ ! -d "$BASE_PATH/lastInstalation" ]; then
+        printMessage "Creando directorio respaldo"
+        mkdir $BASE_PATH/lastInstalation
+    fi
+
     cd $BASE_PATH
-    mkdir logs
 }
 
 cleanBinaryPath() {
     if [ -d "$BASE_PATH" ]; then
-        
         cd $BASE_PATH
-        echo "**********************************"
-        echo "   Empaquetando versión anterior  "
-        echo "**********************************"
-        sleep 1
-        
+
+        printMessage "Empaquetando versión anterior"
         tar --exclude='metrics.db' --exclude="builds" --exclude="node_modules" -zcvf last.tag.gz ./*
+        mv last.tag.gz $BASE_PATH/lastInstalation
 
-        echo "**********************************"
-        echo "     Limpiando directorios        "
-        echo "**********************************"
-        sleep 1
-
-        rm -rf `ls | grep -v metrics.db`
+        printMessage "Limpiando directorios"
+        rm -rf `ls | grep -v metrics.db | grep -v lastInstalation`
+        mkdir $BASE_PATH/logs
         
     fi
 }
@@ -41,38 +38,45 @@ binaryDeploy() {
     cleanBinaryPath
     createDirectories
 
-    echo "**********************************"
-    echo "          Desempaquetando         "
-    echo "**********************************"
-    sleep 1
-
+    printMessage "Desempaquetando"
     mv "$USER_PATH/$PACKAGE_NAME" "$BASE_PATH"
     cd "$BASE_PATH"
     tar -zxvf "$PACKAGE_NAME"
-    echo "**********************************"
-    echo "        Agregando permisos        "
-    echo "**********************************"
-    sleep 1
+
+    printMessage "Agregando permisos"
     chmod +x bin/*.sh
     mv bin/start.sh ./
     mv bin/stop.sh ./
 
-    echo "**********************************"
-    echo "      Limpiando instalación       "
-    echo "**********************************"
-    sleep 1
+    printMessage "Limpiando instalación"
     rm -rf *.tar.gz
     mv etc/filledConfiguration.properties etc/configuration.properties
 
-    echo "**********************************"
-    echo "      Instalando dependencias     "
-    echo "**********************************"
-    sleep 1
+    printMessage "Instalando dependencias"
     npm install
 
-    echo "**********************************"
-    echo "       Instalación Terminada      "
-    echo "**********************************"
+    printMessage "Reiniciando Instancia"
+    cd $BASE_PATH
+    ./stop.sh
+    ./start.sh
+    printMessage "Instalación Terminada"
+}
+
+printMessage() {
+    LENGHT=40
+    REMAIN=$(($((LENGHT - ${#1})) / 2 ))
+    SPACES=""
+    ASTERICS=""
+    for (( c=1; c<=$LENGHT; c++ )); do
+        ASTERICS=$ASTERICS"*"
+    done
+    for (( c=1; c<=$REMAIN; c++ )); do
+        SPACES=$SPACES" "
+    done
+    echo "$ASTERICS"
+    echo "$SPACES$1"
+    echo "$ASTERICS"
+    sleep 1
 }
 
 binaryDeploy
