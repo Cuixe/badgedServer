@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?><!DOCTYPE report PUBLIC "-//JACOCO//DTD Report 1.0//EN"
+        "report.dtd">
+<report name="notifier">
+    <sessioninfo id="WORK_ARCH-630edae" start="1514323634531" dump="1514323640073"/>
+    <counter type="INSTRUCTION" missed="124" covered="677"/>
+    <counter type="BRANCH" missed="8" covered="8"/>
+    <counter type="LINE" missed="28" covered="189"/>
+    <counter type="COMPLEXITY" missed="14" covered="71"/>
+    <counter type="METHOD" missed="8" covered="69"/>
+    <counter type="CLASS" missed="0" covered="16"/>
+</report>

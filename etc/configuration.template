@@ -1,0 +1,3 @@
+badge.port = ${port}
+badge.gitlab.url = ${gitlabUrl}
+badge.gitlab.token = ${gitlabToken}
